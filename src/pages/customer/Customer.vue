@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2> Customer Page </h2>
-        <!-- <input type="text" placeholder="Search..." v-model="searchTerm" /> -->
+        <input type="text" placeholder="Search..." v-model="searchTerm" />
         <table >
             <thead >
                 <tr>
@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="customer in customers" :key="customer.id">
+                <tr v-for="customer in searchCustomer" :key="customer.id">
                     <td>{{ customer.id }}</td>
                     <td>{{ customer.name }}</td>
                     <td>{{ customer.email }}</td>
@@ -32,10 +32,21 @@
 
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
     const baseurl = import.meta.env.VITE_API_BASE_URL;
     const customers = ref([])
+    let searchTerm = ref('');
+
+    const searchCustomer = computed(()=>{
+        let q = searchTerm.value.toLowerCase();
+        if (!q) {
+            return customers.value;
+        }
+        return customers.value.filter((customer)=>{
+            return customer.name.toLowerCase().includes(q) || customer.email.toLowerCase().includes(q) || customer.phone.toLowerCase().includes(q)
+        })
+    })
 
     const fetchCustomer = async () => {
         axios.get(`${baseurl}/customer`)
@@ -65,13 +76,4 @@ import { onMounted, ref } from 'vue';
 
 <style scoped>
 
-ol {
-    list-style-type: decimal;
-    padding-left: 20px;
-}
-li {
-    text-align: left;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
 </style>
