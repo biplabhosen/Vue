@@ -7,6 +7,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Photo</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Address</th>
@@ -17,6 +18,7 @@
                 <tr v-for="customer in searchCustomer" :key="customer.id">
                     <td>{{ customer.id }}</td>
                     <td>{{ customer.name }}</td>
+                    <td><img :src="`${imgurl}/customer/${customer.photo }`" width="50px" alt="Photo" srcset=""></td>
                     <td>{{ customer.email }}</td>
                     <td>{{ customer.phone }}</td>
                     <td>{{ customer.address }}</td>
@@ -35,6 +37,7 @@ import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
 
     const baseurl = import.meta.env.VITE_API_BASE_URL;
+    const imgurl = import.meta.env.VITE_API_IMG_BASE_URL;
     const customers = ref([])
     let searchTerm = ref('');
 

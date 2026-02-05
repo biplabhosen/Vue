@@ -19,6 +19,10 @@
                 <label for="address">address:</label>
                 <input type="text" id="address" name="address" v-model="customer.address" />
             </div>
+            <div>
+                <label for="photo">photo:</label>
+                <input type="file" id="photo" name="photo" @change="handleFileInput" />
+            </div>
             <button type="submit">Create Customer</button>
         </form>
     </div>
@@ -35,11 +39,23 @@ import { useRouter } from 'vue-router';
         name:'',
         email:'',
         phone:'',
+        photo: null,
         address:''
     })
 
+    const handleFileInput = (e) => {
+        customer.photo = e.target.files[0]
+    }
+
     const createCustomer= ()=>{
-        axios.post(`http://127.0.0.1:8000/api/customer`,customer)
+        let formData = new FormData();
+        formData.append('name', customer.name)
+        formData.append('email', customer.email)
+        formData.append('phone', customer.phone)
+        formData.append('photo', customer.photo)
+        formData.append('address', customer.address)
+
+        axios.post(`http://127.0.0.1:8000/api/customer`,formData)
         .then(res=>{
             console.log(res.data)
             router.push('/customer')
